@@ -2,17 +2,39 @@ package com.hyt.AAbooks.controller;
 
 
 import com.hyt.AAbooks.domain.LearnResouce;
+import com.hyt.AAbooks.domain.User;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/learn")
 public class LearnResourceController {
-    @RequestMapping(value="/*")
+    @RequestMapping(value = "/login",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> login(HttpServletRequest request, HttpServletResponse response){
+        Map<String,Object> map =new HashMap<String,Object>();
+        String userName=request.getParameter("userName");
+        String password=request.getParameter("password");
+        if(!userName.equals("") && password!=""){
+            User user =new User(userName,password);
+            request.getSession().setAttribute("user",user);
+            map.put("result","1");
+        }else{
+            map.put("result","0");
+        }
+        return map;
+    }
+
+    @RequestMapping(value="/learn")
     public ModelAndView index()
     {
         List<LearnResouce> learnList =new ArrayList<LearnResouce>();
@@ -36,7 +58,7 @@ public class LearnResourceController {
         learnList.add(bean);
         bean =new LearnResouce("林祥纤博客系列","从零开始学Spring Boot ","http://412887952-qq-com.iteye.com/category/356333");
         learnList.add(bean);
-        ModelAndView modelAndView = new ModelAndView("/index");
+        ModelAndView modelAndView = new ModelAndView("/template");
         modelAndView.addObject("learnList",learnList);
         return modelAndView;
     }
