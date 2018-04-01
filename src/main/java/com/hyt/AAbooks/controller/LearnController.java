@@ -2,6 +2,7 @@ package com.hyt.AAbooks.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageInfo;
 import com.hyt.AAbooks.domain.LearnResouce;
 import com.hyt.AAbooks.service.LearnService;
 import com.hyt.AAbooks.tools.Page;
@@ -48,12 +49,12 @@ public class LearnController {
         params.put("rows", rows);
         params.put("author", author);
         params.put("title", title);
-        Page pageObj =learnService.queryLearnResouceList(params);
-        List<Map<String, Object>> learnList=pageObj.getResultList();
+        List<LearnResouce> learnList=learnService.queryLearnResouceList(params);
+        PageInfo<LearnResouce> pageInfo =new PageInfo<LearnResouce>(learnList);
         JSONObject jo=new JSONObject();
         jo.put("rows", learnList);
-        jo.put("total", pageObj.getTotalPages());
-        jo.put("records", pageObj.getTotalRows());
+        jo.put("total", pageInfo.getPages());//总页数
+        jo.put("records",pageInfo.getTotal());//查询出的总记录数
         ServletUtil.createSuccessResponse(200, jo, response);
     }
     /**
@@ -157,7 +158,7 @@ public class LearnController {
         System.out.println("ids==="+ids);
         JSONObject result = new JSONObject();
         //删除操作
-        int index = learnService.deleteByIds(ids);
+        int index = learnService.deleteByIds(ids.split(","));
         if(index>0){
             result.put("message","教程信息删除成功!");
             result.put("flag",true);
