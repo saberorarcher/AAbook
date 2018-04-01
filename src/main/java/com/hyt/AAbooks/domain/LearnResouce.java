@@ -1,9 +1,11 @@
 package com.hyt.AAbooks.domain;
 
 public class LearnResouce {
+    private Long id;
     private String author;
     private String title;
     private String url;
+    public LearnResouce(){}
     public LearnResouce(String author,String title,String url) {
         this.author=author;
         this.title=title;
@@ -32,5 +34,13 @@ public class LearnResouce {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
